@@ -241,12 +241,12 @@
         <form id="reviewForm" action="https://formspree.io/f/xvkprnzn" method="POST">
             <div class="form-group">
                 <label id="t-nameLabel" for="author">Vaše jméno</label>
-                <input type="text" id="author" required placeholder="např. Jan Novák">
+                <input type="text" id="author" name="author" required placeholder="např. Jan Novák">
             </div>
 
             <div class="form-group">
                 <label id="t-emailLabel" for="email">E-mail (nepovinné)</label>
-                <input type="email" id="email" placeholder="např. jan.novak@email.cz">
+                <input type="email" id="email" name="email" placeholder="např. jan.novak@email.cz">
             </div>
 
             <div class="form-group">
@@ -258,12 +258,12 @@
                     <button type="button" class="star" data-value="4">★</button>
                     <button type="button" class="star" data-value="5">★</button>
                 </div>
-                <input type="hidden" id="rating" value="5" required>
+                <input type="hidden" id="rating" name="rating" value="5" required>
             </div>
 
             <div class="form-group">
                 <label id="t-commentLabel" for="comment">Vaše hodnocení a zkušenost</label>
-                <textarea id="comment" required placeholder="Napište nám, co se vám líbilo nebo co bychom mohli zlepšit..."></textarea>
+                <textarea id="comment" name="comment" required placeholder="Napište nám, co se vám líbilo nebo co bychom mohli zlepšit..."></textarea>
             </div>
 
             <button type="submit" id="t-submitBtn" class="btn">Odeslat recenzi</button>
@@ -471,32 +471,15 @@
     }
 
     reviewForm.addEventListener('submit', (e) => {
-        e.preventDefault();
         const author = document.getElementById('author').value.trim();
         const comment = document.getElementById('comment').value.trim();
 
-        if (!author || !comment) return;
+        if (!author || !comment) {
+            e.preventDefault();
+            return;
+        }
 
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('cs-CZ');
-
-        reviews.unshift({
-            author,
-            rating: currentRating,
-            comment,
-            date: dateStr
-        });
-
-        reviewForm.reset();
-        currentRating = 5;
-        ratingInput.value = 5;
-        updateStarDisplay(5);
-        renderReviews();
-
-        successAlert.style.display = 'block';
-        setTimeout(() => {
-            successAlert.style.display = 'none';
-        }, 4000);
+        // Formulář se normálně odešle přes Formspree na e-mail a současně se zobrazí hlášení
     });
 
     updateStarDisplay(5);
