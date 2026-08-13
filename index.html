@@ -177,7 +177,6 @@
     <div class="card">
         <div id="successAlert" class="alert-success">Děkujeme! Vaše recenze byla úspěšně odeslána.</div>
         
-        <!-- Formulář odesílající data přímo přes Formspree -->
         <form id="reviewForm" action="https://formspree.io/f/xvkprnzn" method="POST">
             <div class="form-group">
                 <label id="t-nameLabel" for="author">Vaše jméno</label>
@@ -198,7 +197,6 @@
                     <button type="button" class="star" data-value="4">★</button>
                     <button type="button" class="star" data-value="5">★</button>
                 </div>
-                <!-- Skryté pole, které odesílá počet hvězdiček do Formspree -->
                 <input type="hidden" id="rating" name="rating" value="5" required>
             </div>
 
