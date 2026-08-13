@@ -146,67 +146,6 @@
             background-color: var(--primary-hover);
         }
 
-        .reviews-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .reviews-header h2 {
-            font-size: 1.25rem;
-        }
-
-        .stats {
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        .review-item {
-            border-bottom: 1px solid var(--border);
-            padding: 16px 0;
-        }
-
-        .review-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .review-header-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .review-author {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .review-date {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-
-        .review-stars {
-            color: #f59e0b;
-            font-size: 0.95rem;
-            margin-bottom: 6px;
-        }
-
-        .review-text {
-            font-size: 0.95rem;
-            color: var(--text);
-        }
-
-        .empty-state {
-            text-align: center;
-            color: var(--text-light);
-            padding: 24px 0;
-            font-size: 0.95rem;
-        }
-
         .alert-success {
             background-color: #d1fae5;
             color: #065f46;
@@ -238,6 +177,7 @@
     <div class="card">
         <div id="successAlert" class="alert-success">Děkujeme! Vaše recenze byla úspěšně odeslána.</div>
         
+        <!-- Formulář odesílající data přímo přes Formspree -->
         <form id="reviewForm" action="https://formspree.io/f/xvkprnzn" method="POST">
             <div class="form-group">
                 <label id="t-nameLabel" for="author">Vaše jméno</label>
@@ -258,6 +198,7 @@
                     <button type="button" class="star" data-value="4">★</button>
                     <button type="button" class="star" data-value="5">★</button>
                 </div>
+                <!-- Skryté pole, které odesílá počet hvězdiček do Formspree -->
                 <input type="hidden" id="rating" name="rating" value="5" required>
             </div>
 
@@ -268,16 +209,6 @@
 
             <button type="submit" id="t-submitBtn" class="btn">Odeslat recenzi</button>
         </form>
-    </div>
-
-    <div class="card">
-        <div class="reviews-header">
-            <h2 id="t-otherReviews">Hodnocení ostatních hostů</h2>
-            <div class="stats" id="statsText">Průměr: 0.0 ★ (0)</div>
-        </div>
-        <div id="reviewsList">
-            <div id="t-emptyState" class="empty-state">Zatím zde nejsou žádné recenze. Buďte první!</div>
-        </div>
     </div>
 </div>
 
@@ -294,10 +225,7 @@
             commentLabel: "Vaše hodnocení a zkušenost",
             commentPlaceholder: "Napište nám, co se vám líbilo nebo co bychom mohli zlepšit...",
             submitBtn: "Odeslat recenzi",
-            successAlert: "Děkujeme! Vaše recenze byla úspěšně odeslána.",
-            otherReviews: "Hodnocení ostatních hostů",
-            emptyState: "Zatím zde nejsou žádné recenze. Buďte první!",
-            avgText: "Průměr"
+            successAlert: "Děkujeme! Vaše recenze byla úspěšně odeslána."
         },
         en: {
             title: "Leave us a review",
@@ -310,10 +238,7 @@
             commentLabel: "Your experience",
             commentPlaceholder: "Tell us what you liked or what we could improve...",
             submitBtn: "Submit review",
-            successAlert: "Thank you! Your review has been successfully submitted.",
-            otherReviews: "Other guests' reviews",
-            emptyState: "No reviews yet. Be the first!",
-            avgText: "Average"
+            successAlert: "Thank you! Your review has been successfully submitted."
         },
         de: {
             title: "Hinterlassen Sie uns eine Bewertung",
@@ -326,10 +251,7 @@
             commentLabel: "Ihre Erfahrung",
             commentPlaceholder: "Teilen Sie uns mit, was Ihnen gefallen hat oder was wir verbessern könnten...",
             submitBtn: "Bewertung absenden",
-            successAlert: "Vielen Dank! Ihre Bewertung wurde erfolgreich gesendet.",
-            otherReviews: "Bewertungen anderer Gäste",
-            emptyState: "Noch keine Bewertungen. Seien Sie der Erste!",
-            avgText: "Durchschnitt"
+            successAlert: "Vielen Dank! Ihre Bewertung wurde erfolgreich gesendet."
         },
         pl: {
             title: "Zostaw nam opinię",
@@ -342,41 +264,16 @@
             commentLabel: "Twoja opinia i doświadczenie",
             commentPlaceholder: "Napisz nam, co Ci się podobało lub co moglibyśmy poprawić...",
             submitBtn: "Wyślij opinię",
-            successAlert: "Dziękujemy! Twoja opinia została pomyślnie wysłana.",
-            otherReviews: "Opinie innych gości",
-            emptyState: "Brak opinii. Bądź pierwszy!",
-            avgText: "Średnia"
+            successAlert: "Dziękujemy! Twoja opinia została pomyślnie wysłana."
         }
     };
 
-    let currentLang = 'cs';
     let currentRating = 5;
-    let reviews = [
-        {
-            author: "Pavel Kříž",
-            rating: 5,
-            comment: "Naprosto bezproblémový pobyt, skvělá domluva a čisté prostředí. Určitě doporučuji všem!",
-            date: "11. 8. 2026"
-        },
-        {
-            author: "Lucie Veselá",
-            rating: 4,
-            comment: "Pěkné ubytování v klidné lokalitě. Vše odpovídalo popisu.",
-            date: "8. 8. 2026"
-        }
-    ];
-
     const stars = document.querySelectorAll('.star');
     const ratingInput = document.getElementById('rating');
-    const reviewForm = document.getElementById('reviewForm');
-    const reviewsList = document.getElementById('reviewsList');
-    const statsText = document.getElementById('statsText');
-    const successAlert = document.getElementById('successAlert');
 
     function changeLanguage(lang) {
-        currentLang = lang;
         const t = translations[lang];
-
         document.getElementById('t-title').textContent = t.title;
         document.getElementById('t-subtitle').textContent = t.subtitle;
         document.getElementById('t-nameLabel').textContent = t.nameLabel;
@@ -388,9 +285,6 @@
         document.getElementById('comment').placeholder = t.commentPlaceholder;
         document.getElementById('t-submitBtn').textContent = t.submitBtn;
         document.getElementById('successAlert').textContent = t.successAlert;
-        document.getElementById('t-otherReviews').textContent = t.otherReviews;
-
-        renderReviews();
     }
 
     function updateStarDisplay(rating) {
@@ -428,62 +322,7 @@
         updateStarDisplay(currentRating);
     });
 
-    function renderReviews() {
-        const t = translations[currentLang];
-        if (reviews.length === 0) {
-            reviewsList.innerHTML = `<div class="empty-state">${t.emptyState}</div>`;
-            statsText.textContent = `${t.avgText}: 0.0 ★ (0)`;
-            return;
-        }
-
-        let totalRating = 0;
-        let html = '';
-
-        reviews.forEach(rev => {
-            totalRating += rev.rating;
-            const starsString = '★'.repeat(rev.rating) + '☆'.repeat(5 - rev.rating);
-            html += `
-                <div class="review-item">
-                    <div class="review-header-info">
-                        <span class="review-author">${escapeHtml(rev.author)}</span>
-                        <span class="review-date">${rev.date}</span>
-                    </div>
-                    <div class="review-stars">${starsString}</div>
-                    <div class="review-text">${escapeHtml(rev.comment)}</div>
-                </div>
-            `;
-        });
-
-        reviewsList.innerHTML = html;
-        const avg = (totalRating / reviews.length).toFixed(1);
-        statsText.textContent = `${t.avgText}: ${avg} ★ (${reviews.length})`;
-    }
-
-    function escapeHtml(text) {
-        const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-        };
-        return text.replace(/[&<>"']/g, m => map[m]);
-    }
-
-    reviewForm.addEventListener('submit', (e) => {
-        const author = document.getElementById('author').value.trim();
-        const comment = document.getElementById('comment').value.trim();
-
-        if (!author || !comment) {
-            e.preventDefault();
-            return;
-        }
-
-        // Formulář se normálně odešle přes Formspree na e-mail a současně se zobrazí hlášení
-    });
-
     updateStarDisplay(5);
-    renderReviews();
 </script>
 
 </body>
