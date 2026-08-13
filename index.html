@@ -35,6 +35,22 @@
             margin: 0 auto;
         }
 
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+        }
+
+        select.lang-select {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+        }
+
         header {
             text-align: center;
             margin-bottom: 32px;
@@ -205,9 +221,18 @@
 <body>
 
 <div class="container">
+    <div class="top-bar">
+        <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="cs">Čeština</option>
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="pl">Polski</option>
+        </select>
+    </div>
+
     <header>
-        <h1>Napište nám recenzi</h1>
-        <p>Vaše zpětná vazba je pro nás velice důležitá a pomáhá nám zlepšovat naše služby.</p>
+        <h1 id="t-title">Napište nám recenzi</h1>
+        <p id="t-subtitle">Vaše zpětná vazba je pro nás velice důležitá a pomáhá nám zlepšovat naše služby.</p>
     </header>
 
     <div class="card">
@@ -215,17 +240,17 @@
         
         <form id="reviewForm">
             <div class="form-group">
-                <label for="author">Vaše jméno</label>
+                <label id="t-nameLabel" for="author">Vaše jméno</label>
                 <input type="text" id="author" required placeholder="např. Jan Novák">
             </div>
 
             <div class="form-group">
-                <label for="email">E-mail (nepovinné)</label>
+                <label id="t-emailLabel" for="email">E-mail (nepovinné)</label>
                 <input type="email" id="email" placeholder="např. jan.novak@email.cz">
             </div>
 
             <div class="form-group">
-                <label>Hodnocení</label>
+                <label id="t-ratingLabel">Hodnocení</label>
                 <div class="rating-stars" id="starContainer">
                     <button type="button" class="star" data-value="1">★</button>
                     <button type="button" class="star" data-value="2">★</button>
@@ -237,26 +262,94 @@
             </div>
 
             <div class="form-group">
-                <label for="comment">Vaše hodnocení a zkušenost</label>
+                <label id="t-commentLabel" for="comment">Vaše hodnocení a zkušenost</label>
                 <textarea id="comment" required placeholder="Napište nám, co se vám líbilo nebo co bychom mohli zlepšit..."></textarea>
             </div>
 
-            <button type="submit" class="btn">Odeslat recenzi</button>
+            <button type="submit" id="t-submitBtn" class="btn">Odeslat recenzi</button>
         </form>
     </div>
 
     <div class="card">
         <div class="reviews-header">
-            <h2>Hodnocení ostatních hostů</h2>
+            <h2 id="t-otherReviews">Hodnocení ostatních hostů</h2>
             <div class="stats" id="statsText">Průměr: 0.0 ★ (0)</div>
         </div>
         <div id="reviewsList">
-            <div class="empty-state">Zatím zde nejsou žádné recenze. Buďte první!</div>
+            <div id="t-emptyState" class="empty-state">Zatím zde nejsou žádné recenze. Buďte první!</div>
         </div>
     </div>
 </div>
 
 <script>
+    const translations = {
+        cs: {
+            title: "Napište nám recenzi",
+            subtitle: "Vaše zpětná vazba je pro nás velice důležitá a pomáhá nám zlepšovat naše služby.",
+            nameLabel: "Vaše jméno",
+            namePlaceholder: "např. Jan Novák",
+            emailLabel: "E-mail (nepovinné)",
+            emailPlaceholder: "např. jan.novak@email.cz",
+            ratingLabel: "Hodnocení",
+            commentLabel: "Vaše hodnocení a zkušenost",
+            commentPlaceholder: "Napište nám, co se vám líbilo nebo co bychom mohli zlepšit...",
+            submitBtn: "Odeslat recenzi",
+            successAlert: "Děkujeme! Vaše recenze byla úspěšně odeslána.",
+            otherReviews: "Hodnocení ostatních hostů",
+            emptyState: "Zatím zde nejsou žádné recenze. Buďte první!",
+            avgText: "Průměr"
+        },
+        en: {
+            title: "Leave us a review",
+            subtitle: "Your feedback is very important to us and helps us improve our services.",
+            nameLabel: "Your name",
+            namePlaceholder: "e.g. John Doe",
+            emailLabel: "E-mail (optional)",
+            emailPlaceholder: "e.g. john.doe@email.com",
+            ratingLabel: "Rating",
+            commentLabel: "Your experience",
+            commentPlaceholder: "Tell us what you liked or what we could improve...",
+            submitBtn: "Submit review",
+            successAlert: "Thank you! Your review has been successfully submitted.",
+            otherReviews: "Other guests' reviews",
+            emptyState: "No reviews yet. Be the first!",
+            avgText: "Average"
+        },
+        de: {
+            title: "Hinterlassen Sie uns eine Bewertung",
+            subtitle: "Ihr Feedback ist uns sehr wichtig und hilft uns, unsere Dienstleistungen zu verbessern.",
+            nameLabel: "Ihr Name",
+            namePlaceholder: "z.B. Max Mustermann",
+            emailLabel: "E-Mail (optional)",
+            emailPlaceholder: "z.B. max@email.de",
+            ratingLabel: "Bewertung",
+            commentLabel: "Ihre Erfahrung",
+            commentPlaceholder: "Teilen Sie uns mit, was Ihnen gefallen hat oder was wir verbessern könnten...",
+            submitBtn: "Bewertung absenden",
+            successAlert: "Vielen Dank! Ihre Bewertung wurde erfolgreich gesendet.",
+            otherReviews: "Bewertungen anderer Gäste",
+            emptyState: "Noch keine Bewertungen. Seien Sie der Erste!",
+            avgText: "Durchschnitt"
+        },
+        pl: {
+            title: "Zostaw nam opinię",
+            subtitle: "Twoja opinia jest dla nas bardzo ważna i pomaga nam ulepszać nasze usługi.",
+            nameLabel: "Twoje imię",
+            namePlaceholder: "np. Jan Kowalski",
+            emailLabel: "E-mail (opcjonalnie)",
+            emailPlaceholder: "np. jan@email.pl",
+            ratingLabel: "Ocena",
+            commentLabel: "Twoja opinia i doświadczenie",
+            commentPlaceholder: "Napisz nam, co Ci się podobało lub co moglibyśmy poprawić...",
+            submitBtn: "Wyślij opinię",
+            successAlert: "Dziękujemy! Twoja opinia została pomyślnie wysłana.",
+            otherReviews: "Opinie innych gości",
+            emptyState: "Brak opinii. Bądź pierwszy!",
+            avgText: "Średnia"
+        }
+    };
+
+    let currentLang = 'cs';
     let currentRating = 5;
     let reviews = [
         {
@@ -279,6 +372,26 @@
     const reviewsList = document.getElementById('reviewsList');
     const statsText = document.getElementById('statsText');
     const successAlert = document.getElementById('successAlert');
+
+    function changeLanguage(lang) {
+        currentLang = lang;
+        const t = translations[lang];
+
+        document.getElementById('t-title').textContent = t.title;
+        document.getElementById('t-subtitle').textContent = t.subtitle;
+        document.getElementById('t-nameLabel').textContent = t.nameLabel;
+        document.getElementById('author').placeholder = t.namePlaceholder;
+        document.getElementById('t-emailLabel').textContent = t.emailLabel;
+        document.getElementById('email').placeholder = t.emailPlaceholder;
+        document.getElementById('t-ratingLabel').textContent = t.ratingLabel;
+        document.getElementById('t-commentLabel').textContent = t.commentLabel;
+        document.getElementById('comment').placeholder = t.commentPlaceholder;
+        document.getElementById('t-submitBtn').textContent = t.submitBtn;
+        document.getElementById('successAlert').textContent = t.successAlert;
+        document.getElementById('t-otherReviews').textContent = t.otherReviews;
+
+        renderReviews();
+    }
 
     function updateStarDisplay(rating) {
         stars.forEach(star => {
@@ -316,9 +429,10 @@
     });
 
     function renderReviews() {
+        const t = translations[currentLang];
         if (reviews.length === 0) {
-            reviewsList.innerHTML = '<div class="empty-state">Zatím zde nejsou žádné recenze. Buďte první!</div>';
-            statsText.textContent = 'Průměr: 0.0 ★ (0)';
+            reviewsList.innerHTML = `<div class="empty-state">${t.emptyState}</div>`;
+            statsText.textContent = `${t.avgText}: 0.0 ★ (0)`;
             return;
         }
 
@@ -342,7 +456,7 @@
 
         reviewsList.innerHTML = html;
         const avg = (totalRating / reviews.length).toFixed(1);
-        statsText.textContent = `Průměr: ${avg} ★ (${reviews.length})`;
+        statsText.textContent = `${t.avgText}: ${avg} ★ (${reviews.length})`;
     }
 
     function escapeHtml(text) {
@@ -359,7 +473,7 @@
     reviewForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const author = document.getElementById('author').value.trim();
-        const comment = document.getElementById('comment'].value.trim();
+        const comment = document.getElementById('comment').value.trim();
 
         if (!author || !comment) return;
 
