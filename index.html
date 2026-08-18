@@ -30,8 +30,7 @@
         <p id="txtHeaderDesc">Děkujeme, že jste se u nás ubytovali! Pomozte nám zlepšit naše služby.</p>
     </div>
 
-    <!-- Zde zadejte hlavní e-mail -->
-    <form id="feedbackForm" action="https://formsubmit.co/hlavni-vich@hotelbabylon.cz,druhy-sykorova@hotelbabylon.cz" method="POST">
+    <form id="feedbackForm" action="https://formsubmit.co/vich@hotelbabylon.cz" method="POST">
         <div class="guest-info-section">
             <div class="text-group">
                 <label for="guestName" id="txtGuestName">Vaše jméno (volitelné):</label>
@@ -148,9 +147,9 @@
                 { title: "2. Czystość", desc: "Jak oceniasz czystość pokoju i części wspólnych?" },
                 { title: "3. Wygoda i wyposażenie", desc: "Jak oceniasz wygodę łóżka, jakość snu i wyposażenie pokoju?" },
                 { title: "4. Obsługa gości i atmosfera", desc: "Jak oceniasz opiekę nad gośćmi, pomocność personelu i ogólną atmosferę?" },
-                { title: "5. Okolica i otoczenie", desc: "Jak oceniasz spokój, otoczenie i možnosti spędzania czasu w pobliżu?" },
+                { title: "5. Okolica i otoczenie", desc: "Jak oceniasz spokój, otoczenie i możliwości spędzania czasu w pobliżu?" },
                 { title: "6. Stosunek ceny do jakości", desc: "Jak oceniasz wartość zakwaterowania w stosunku do zapłaconej ceny?" },
-                { title: "7. Polecenie (NPS)", desc: "Jakie jest prawdopodobieństwo, że polecisz nasz obiekt znajomym lub współpracownikom?" }
+                { title: "7. Polecenie (NPS)", desc: "Jakie jest prawdopodobieństwo, že polecisz nasz obiekt znajomym lub współpracownikom?" }
             ]
         }
     };
@@ -224,7 +223,6 @@
         });
     }
 
-    // Odesílání přes FormSubmit.co s parametrem _cc
     document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -237,12 +235,12 @@
         const payload = {
             "Jméno hosta": document.getElementById('guestName').value || "Neuvedeno",
             "E-mail hosta": document.getElementById('guestEmail').value || "Neuvedeno",
-            "Jazyk": currentLang.toUpperCase(),
+            "Jazyk dotazníku": currentLang.toUpperCase(),
             "Komentář": document.getElementById('comments').value || "Bez komentáře",
             "_subject": `Nové hodnocení ubytování (${currentLang.toUpperCase()})`,
             "_template": "table",
             "_captcha": "false",
-            "_cc": "kopie-email@domena.cz" // <-- Zde zadejte druhý e-mail pro kopii
+            "_cc": "sykorova@hotelbabylon.cz"
         };
 
         questionIds.forEach((id, index) => {
