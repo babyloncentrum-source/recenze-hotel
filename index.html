@@ -172,13 +172,16 @@
 
     <div class="card">
         <!-- Odesílání přes FormSubmit.co -->
-        <form id="reviewForm" action="https://formsubmit.co/vich@hotelbabylon.cz" method="POST">
+        <form id="reviewForm" action="https://formsubmit.co/VAS_EMAIL@DOMENA.CZ" method="POST">
             
             <!-- Konfigurace FormSubmit -->
             <input type="hidden" name="_captcha" value="false">
             <input type="hidden" name="_subject" value="Nová recenze z webu">
             <input type="hidden" name="_template" value="table">
             <input type="hidden" name="_next" value="https://babyloncentrum-source.github.io/recenze-hotel/">
+
+            <!-- Automatické potvrzení odeslané hostovi na zadaný e-mail -->
+            <input type="hidden" id="autoresponseInput" name="_autoresponse" value="Děkujeme za odeslání Vašeho hodnocení! Velice si vážíme Vaší zpětné vazby.">
 
             <div class="form-group">
                 <label id="t-nameLabel" for="author">Vaše jméno</label>
@@ -187,7 +190,8 @@
 
             <div class="form-group">
                 <label id="t-emailLabel" for="email">E-mail (nepovinné)</label>
-                <input type="email" id="email" name="Email" placeholder="např. jan.novak@email.cz">
+                <!-- Název 'email' je nutný pro odeslání automatického potvrzení hostovi -->
+                <input type="email" id="email" name="email" placeholder="např. jan.novak@email.cz">
             </div>
 
             <div class="form-group">
@@ -224,7 +228,8 @@
             ratingLabel: "Hodnocení",
             commentLabel: "Vaše hodnocení a zkušenost",
             commentPlaceholder: "Napište nám, co se vám líbilo nebo co bychom mohli zlepšit...",
-            submitBtn: "Odeslat recenzi"
+            submitBtn: "Odeslat recenzi",
+            autoresponse: "Děkujeme za odeslání Vašeho hodnocení! Velice si vážíme Vaší zpětné vazby."
         },
         en: {
             title: "Leave us a review",
@@ -236,7 +241,8 @@
             ratingLabel: "Rating",
             commentLabel: "Your experience",
             commentPlaceholder: "Tell us what you liked or what we could improve...",
-            submitBtn: "Submit review"
+            submitBtn: "Submit review",
+            autoresponse: "Thank you for submitting your review! We truly appreciate your feedback."
         },
         de: {
             title: "Hinterlassen Sie uns eine Bewertung",
@@ -248,11 +254,12 @@
             ratingLabel: "Bewertung",
             commentLabel: "Ihre Erfahrung",
             commentPlaceholder: "Teilen Sie uns mit, was Ihnen gefallen hat oder was wir verbessern könnten...",
-            submitBtn: "Bewertung absenden"
+            submitBtn: "Bewertung absenden",
+            autoresponse: "Vielen Dank für Ihre Bewertung! Wir schätzen Ihr Feedback sehr."
         },
         pl: {
             title: "Zostaw nam opinię",
-            subtitle: "Twoja opinia jest dla nas bardzo ważna i pomaga nam ulepszać naše usługi.",
+            subtitle: "Twoja opinia jest dla nas bardzo ważna i pomaga nam ulepszać nasze usługi.",
             nameLabel: "Twoje imię",
             namePlaceholder: "np. Jan Kowalski",
             emailLabel: "E-mail (opcjonalnie)",
@@ -260,7 +267,8 @@
             ratingLabel: "Ocena",
             commentLabel: "Twoja opinia i doświadczenie",
             commentPlaceholder: "Napisz nam, co Ci się podobało lub co moglibyśmy poprawić...",
-            submitBtn: "Wyślij opinię"
+            submitBtn: "Wyślij opinię",
+            autoresponse: "Dziękujemy za przesłanie opinii! Bardzo doceniamy Twoją ocenę."
         }
     };
 
@@ -280,6 +288,7 @@
         document.getElementById('t-commentLabel').textContent = t.commentLabel;
         document.getElementById('comment').placeholder = t.commentPlaceholder;
         document.getElementById('t-submitBtn').textContent = t.submitBtn;
+        document.getElementById('autoresponseInput').value = t.autoresponse;
     }
 
     function updateStarDisplay(rating) {
