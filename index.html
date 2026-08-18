@@ -3,324 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikace pro sběr recenzí</title>
-    <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-            --text-light: #64748b;
-            --border: #e2e8f0;
-            --success: #10b981;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.5;
-            padding: 24px;
-        }
-
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 16px;
-        }
-
-        select.lang-select {
-            padding: 6px 12px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: white;
-            font-size: 0.9rem;
-            cursor: pointer;
-            outline: none;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        header h1 {
-            font-size: 1.75rem;
-            color: var(--text);
-            margin-bottom: 8px;
-        }
-
-        header p {
-            color: var(--text-light);
-            font-size: 0.95rem;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-weight: 500;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        textarea:focus {
-            border-color: var(--primary);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .rating-stars {
-            display: flex;
-            gap: 8px;
-        }
-
-        .star {
-            font-size: 2rem;
-            color: #cbd5e1;
-            background: none;
-            border: none;
-            cursor: pointer;
-            transition: color 0.15s ease;
-        }
-
-        .star.selected,
-        .star.hovered {
-            color: #f59e0b;
-        }
-
-        button.btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 0.95rem;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s;
-        }
-
-        button.btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .alert-success {
-            background-color: #d1fae5;
-            color: #065f46;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-            display: none;
-        }
-    </style>
+    <title>Zpětná vazba pro hosty</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-    <div class="top-bar">
-        <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
-            <option value="cs">Čeština</option>
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
-            <option value="pl">Polski</option>
+    <div class="lang-selector">
+        <select id="langSelect" onchange="changeLanguage(this.value)">
+            <option value="cs">🇨🇿 Čeština</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="pl">🇵🇱 Polski</option>
         </select>
     </div>
 
-    <header>
-        <h1 id="t-title">Napište nám recenzi</h1>
-        <p id="t-subtitle">Vaše zpětná vazba je pro nás velice důležitá a pomáhá nám zlepšovat naše služby.</p>
-    </header>
-
-    <div class="card">
-        <div id="successAlert" class="alert-success">Děkujeme! Vaše recenze byla úspěšně odeslána.</div>
-        
-        <form id="reviewForm" action="https://formspree.io/f/xvkprnzn" method="POST">
-            <div class="form-group">
-                <label id="t-nameLabel" for="author">Vaše jméno</label>
-                <input type="text" id="author" name="author" required placeholder="např. Jan Novák">
-            </div>
-
-            <div class="form-group">
-                <label id="t-emailLabel" for="email">E-mail (nepovinné)</label>
-                <input type="email" id="email" name="email" placeholder="např. jan.novak@email.cz">
-            </div>
-
-            <div class="form-group">
-                <label id="t-ratingLabel">Hodnocení</label>
-                <div class="rating-stars" id="starContainer">
-                    <button type="button" class="star" data-value="1">★</button>
-                    <button type="button" class="star" data-value="2">★</button>
-                    <button type="button" class="star" data-value="3">★</button>
-                    <button type="button" class="star" data-value="4">★</button>
-                    <button type="button" class="star" data-value="5">★</button>
+    <div class="header">
+        <div class="logo-container">
+            <a href="https://www.mustelka.cz" target="_blank" title="Přejít na mustelka.cz">
+                <div class="logo-placeholder" id="logoUploadBtn">
+                    <img src="logo.png" alt="Logo ubytování" id="logoImg" onerror="this.style.display='none'; this.parentElement.innerText='LOGO';">
                 </div>
-                <input type="hidden" id="rating" name="rating" value="5" required>
-            </div>
+            </a>
+        </div>
+        <h1 id="txtHeaderTitle">Zpětná vazba od hostů</h1>
+        <p id="txtHeaderDesc">Děkujeme, že jste se u nás ubytovali! Pomozte nám zlepšit naše služby.</p>
+    </div>
 
-            <div class="form-group">
-                <label id="t-commentLabel" for="comment">Vaše hodnocení a zkušenost</label>
-                <textarea id="comment" name="comment" required placeholder="Napište nám, co se vám líbilo nebo co bychom mohli zlepšit..."></textarea>
+    <!-- Zde zadejte hlavní e-mail -->
+    <form id="feedbackForm" action="https://formsubmit.co/hlavni-vich@hotelbabylon.cz,druhy-sykorova@hotelbabylon.cz" method="POST">
+        <div class="guest-info-section">
+            <div class="text-group">
+                <label for="guestName" id="txtGuestName">Vaše jméno (volitelné):</label>
+                <input type="text" id="guestName" name="guest_name" placeholder="např. Jan Novák" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; margin-bottom: 16px;">
             </div>
+            <div class="text-group">
+                <label for="guestEmail" id="txtGuestEmail">Váš e-mail (volitelné):</label>
+                <input type="email" id="guestEmail" name="guest_email" placeholder="např. jan@email.cz" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; margin-bottom: 24px;">
+            </div>
+        </div>
 
-            <button type="submit" id="t-submitBtn" class="btn">Odeslat recenzi</button>
-        </form>
+        <div id="questionsContainer"></div>
+
+        <div class="text-group">
+            <label for="comments" id="txtCommentsLabel">Další připomínky a návrhy (volitelné):</label>
+            <textarea id="comments" name="comments" placeholder="Máte nějaké další připomínky, návrhy nebo chcete něco vyzdvihnout?"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="txtSubmitBtn">Odeslat hodnocení</button>
+    </form>
+
+    <div class="success-message" id="successMessage">
+        <h2 id="txtSuccessTitle">Děkujeme za váš názor!</h2>
+        <p id="txtSuccessDesc">Vaše hodnocení bylo úspěšně odesláno.</p>
     </div>
 </div>
 
 <script>
     const translations = {
         cs: {
-            title: "Napište nám recenzi",
-            subtitle: "Vaše zpětná vazba je pro nás velice důležitá a pomáhá nám zlepšovat naše služby.",
-            nameLabel: "Vaše jméno",
-            namePlaceholder: "např. Jan Novák",
-            emailLabel: "E-mail (nepovinné)",
-            emailPlaceholder: "např. jan.novak@email.cz",
-            ratingLabel: "Hodnocení",
-            commentLabel: "Vaše hodnocení a zkušenost",
-            commentPlaceholder: "Napište nám, co se vám líbilo nebo co bychom mohli zlepšit...",
-            submitBtn: "Odeslat recenzi",
-            successAlert: "Děkujeme! Vaše recenze byla úspěšně odeslána."
+            headerTitle: "Zpětná vazba od hostů",
+            headerDesc: "Děkujeme, že jste se u nás ubytovali! Pomozte nám zlepšit naše služby.",
+            guestName: "Vaše jméno (volitelné):",
+            guestEmail: "Váš e-mail (volitelné):",
+            commentsLabel: "Další připomínky a návrhy (volitelné):",
+            commentsPlaceholder: "Máte nějaké další připomínky, návrhy nebo chcete něco vyzdvihnout?",
+            submitBtn: "Odeslat hodnocení",
+            successTitle: "Děkujeme za váš názor!",
+            successDesc: "Vaše hodnocení bylo úspěšně odesláno.",
+            scaleWorst: "1 – Nejhorší",
+            scaleBest: "10 – Vynikající",
+            alertRating: "Prosím ohodnoťte všechny otázky.",
+            questions: [
+                { title: "1. Celková spokojenost", desc: "Jak hodnotíte svůj celkový pobyt u nás?" },
+                { title: "2. Čistota", desc: "Jak jste byli spokojeni s čistotou pokoje a společných prostor?" },
+                { title: "3. Pohodlí a vybavení", desc: "Jak hodnotíte pohodlí postele, kvalitu spánku a vybavenost pokoje?" },
+                { title: "4. Péče o hosty a atmosféra", desc: "Jak hodnotíte péči o hosty, ochotu personálu a celkovou atmosféru?" },
+                { title: "5. Okolí a prostředí", desc: "Jak hodnotíte klid, prostředí a možnosti vyžití v okolí ubytování?" },
+                { title: "6. Poměr cena/výkon", desc: "Jak hodnotíte hodnotu ubytování vzhledem k zaplacené ceně?" },
+                { title: "7. Doporučení (NPS)", desc: "Jaká je pravděpodobnost, že naše ubytování doporučíte přátelům nebo kolegům?" }
+            ]
         },
         en: {
-            title: "Leave us a review",
-            subtitle: "Your feedback is very important to us and helps us improve our services.",
-            nameLabel: "Your name",
-            namePlaceholder: "e.g. John Doe",
-            emailLabel: "E-mail (optional)",
-            emailPlaceholder: "e.g. john.doe@email.com",
-            ratingLabel: "Rating",
-            commentLabel: "Your experience",
-            commentPlaceholder: "Tell us what you liked or what we could improve...",
-            submitBtn: "Submit review",
-            successAlert: "Thank you! Your review has been successfully submitted."
+            headerTitle: "Guest Feedback",
+            headerDesc: "Thank you for staying with us! Help us improve our services.",
+            guestName: "Your Name (optional):",
+            guestEmail: "Your Email (optional):",
+            commentsLabel: "Additional comments & suggestions (optional):",
+            commentsPlaceholder: "Do you have any further comments, suggestions, or highlights?",
+            submitBtn: "Submit Feedback",
+            successTitle: "Thank you for your feedback!",
+            successDesc: "Your rating has been successfully submitted.",
+            scaleWorst: "1 – Worst",
+            scaleBest: "10 – Excellent",
+            alertRating: "Please rate all questions.",
+            questions: [
+                { title: "1. Overall Satisfaction", desc: "How do you rate your overall stay with us?" },
+                { title: "2. Cleanliness", desc: "How satisfied were you with the cleanliness of the room and common areas?" },
+                { title: "3. Comfort & Amenities", desc: "How do you rate bed comfort, sleep quality, and room equipment?" },
+                { title: "4. Guest Care & Atmosphere", desc: "How do you rate guest care, staff willingness, and overall atmosphere?" },
+                { title: "5. Location & Surroundings", desc: "How do you rate the tranquility, surroundings, and activities nearby?" },
+                { title: "6. Value for Money", desc: "How do you rate the accommodation value relative to the price paid?" },
+                { title: "7. Recommendation (NPS)", desc: "What is the likelihood that you would recommend our accommodation to friends or colleagues?" }
+            ]
         },
         de: {
-            title: "Hinterlassen Sie uns eine Bewertung",
-            subtitle: "Ihr Feedback ist uns sehr wichtig und hilft uns, unsere Dienstleistungen zu verbessern.",
-            nameLabel: "Ihr Name",
-            namePlaceholder: "z.B. Max Mustermann",
-            emailLabel: "E-Mail (optional)",
-            emailPlaceholder: "z.B. max@email.de",
-            ratingLabel: "Bewertung",
-            commentLabel: "Ihre Erfahrung",
-            commentPlaceholder: "Teilen Sie uns mit, was Ihnen gefallen hat oder was wir verbessern könnten...",
+            headerTitle: "Gästefeedback",
+            headerDesc: "Vielen Dank für Ihren Aufenthalt bei uns! Helfen Sie uns, unseren Service zu verbessern.",
+            guestName: "Ihr Name (optional):",
+            guestEmail: "Ihre E-Mail (optional):",
+            commentsLabel: "Weitere Anmerkungen und Vorschläge (optional):",
+            commentsPlaceholder: "Haben Sie weitere Kommentare, Vorschläge oder möchten Sie etwas hervorheben?",
             submitBtn: "Bewertung absenden",
-            successAlert: "Vielen Dank! Ihre Bewertung wurde erfolgreich gesendet."
+            successTitle: "Vielen Dank für Ihr Feedback!",
+            successDesc: "Ihre Bewertung wurde erfolgreich gesendet.",
+            scaleWorst: "1 – Am schlechtesten",
+            scaleBest: "10 – Hervorragend",
+            alertRating: "Bitte bewerten Sie alle Fragen.",
+            questions: [
+                { title: "1. Gesamtzufriedenheit", desc: "Wie bewerten Sie Ihren gesamten Aufenthalt bei uns?" },
+                { title: "2. Sauberkeit", desc: "Wie zufrieden waren Sie mit der Sauberkeit des Zimmers und der Gemeinschaftsbereiche?" },
+                { title: "3. Komfort & Ausstattung", desc: "Wie bewerten Sie Bettkomfort, Schlafqualität und Zimmerausstattung?" },
+                { title: "4. Gästebetreuung & Atmosphäre", desc: "Wie bewerten Sie die Betreuung, die Hilfsbereitschaft des Personals und die Atmosphäre?" },
+                { title: "5. Lage & Umgebung", desc: "Wie bewerten Sie Ruhe, Umgebung und Freizeitmöglichkeiten in der Nähe?" },
+                { title: "6. Preis-Leistungs-Verhältnis", desc: "Wie bewerten Sie die Unterkunft im Verhältnis zum gezahlten Preis?" },
+                { title: "7. Weiterempfehlung (NPS)", desc: "Wie wahrscheinlich ist es, dass Sie unsere Unterkunft Freunden oder Kollegen weiterempfehlen?" }
+            ]
         },
         pl: {
-            title: "Zostaw nam opinię",
-            subtitle: "Twoja opinia jest dla nas bardzo ważna i pomaga nam ulepszać nasze usługi.",
-            nameLabel: "Twoje imię",
-            namePlaceholder: "np. Jan Kowalski",
-            emailLabel: "E-mail (opcjonalnie)",
-            emailPlaceholder: "np. jan@email.pl",
-            ratingLabel: "Ocena",
-            commentLabel: "Twoja opinia i doświadczenie",
-            commentPlaceholder: "Napisz nam, co Ci się podobało lub co moglibyśmy poprawić...",
-            submitBtn: "Wyślij opinię",
-            successAlert: "Dziękujemy! Twoja opinia została pomyślnie wysłana."
+            headerTitle: "Opinie gości",
+            headerDesc: "Dziękujemy za pobyt u nas! Pomóż nam ulepszyć nasze usługi.",
+            guestName: "Twoje imię (opcjonalnie):",
+            guestEmail: "Twój e-mail (opcjonalnie):",
+            commentsLabel: "Dodatkowe uwagi i sugestie (opcjonalnie):",
+            commentsPlaceholder: "Masz jakieś dodatkowe uwagi, sugestie lub chcesz coś wyróżnić?",
+            submitBtn: "Wyślij ocenę",
+            successTitle: "Dziękujemy za Twoją opinię!",
+            successDesc: "Twoja ocena została pomyślnie wysłana.",
+            scaleWorst: "1 – Najgorsza",
+            scaleBest: "10 – Doskonała",
+            alertRating: "Proszę ocenić wszystkie pytania.",
+            questions: [
+                { title: "1. Ogólne zadowolenie", desc: "Jak oceniasz swój ogólny pobyt u nas?" },
+                { title: "2. Czystość", desc: "Jak oceniasz czystość pokoju i części wspólnych?" },
+                { title: "3. Wygoda i wyposażenie", desc: "Jak oceniasz wygodę łóżka, jakość snu i wyposażenie pokoju?" },
+                { title: "4. Obsługa gości i atmosfera", desc: "Jak oceniasz opiekę nad gośćmi, pomocność personelu i ogólną atmosferę?" },
+                { title: "5. Okolica i otoczenie", desc: "Jak oceniasz spokój, otoczenie i možnosti spędzania czasu w pobliżu?" },
+                { title: "6. Stosunek ceny do jakości", desc: "Jak oceniasz wartość zakwaterowania w stosunku do zapłaconej ceny?" },
+                { title: "7. Polecenie (NPS)", desc: "Jakie jest prawdopodobieństwo, że polecisz nasz obiekt znajomym lub współpracownikom?" }
+            ]
         }
     };
 
-    let currentRating = 5;
-    const stars = document.querySelectorAll('.star');
-    const ratingInput = document.getElementById('rating');
+    const questionIds = ['overall', 'cleanliness', 'comfort', 'staff', 'location', 'value', 'nps'];
+    const ratings = {};
+    let currentLang = 'cs';
 
     function changeLanguage(lang) {
+        currentLang = lang;
         const t = translations[lang];
-        document.getElementById('t-title').textContent = t.title;
-        document.getElementById('t-subtitle').textContent = t.subtitle;
-        document.getElementById('t-nameLabel').textContent = t.nameLabel;
-        document.getElementById('author').placeholder = t.namePlaceholder;
-        document.getElementById('t-emailLabel').textContent = t.emailLabel;
-        document.getElementById('email').placeholder = t.emailPlaceholder;
-        document.getElementById('t-ratingLabel').textContent = t.ratingLabel;
-        document.getElementById('t-commentLabel').textContent = t.commentLabel;
-        document.getElementById('comment').placeholder = t.commentPlaceholder;
-        document.getElementById('t-submitBtn').textContent = t.submitBtn;
-        document.getElementById('successAlert').textContent = t.successAlert;
-    }
+        document.getElementById('txtHeaderTitle').innerText = t.headerTitle;
+        document.getElementById('txtHeaderDesc').innerText = t.headerDesc;
+        document.getElementById('txtGuestName').innerText = t.guestName;
+        document.getElementById('txtGuestEmail').innerText = t.guestEmail;
+        document.getElementById('txtCommentsLabel').innerText = t.commentsLabel;
+        document.getElementById('comments').placeholder = t.commentsPlaceholder;
+        document.getElementById('txtSubmitBtn').innerText = t.submitBtn;
+        document.getElementById('txtSuccessTitle').innerText = t.successTitle;
+        document.getElementById('txtSuccessDesc').innerText = t.successDesc;
 
-    function updateStarDisplay(rating) {
-        stars.forEach(star => {
-            const val = parseInt(star.getAttribute('data-value'));
-            if (val <= rating) {
-                star.classList.add('selected');
-            } else {
-                star.classList.remove('selected');
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
+
+        t.questions.forEach((q, index) => {
+            const qId = questionIds[index];
+            const group = document.createElement('div');
+            group.className = 'question-group';
+
+            let buttonsHTML = '<div class="scale-container">';
+            for (let i = 1; i <= 10; i++) {
+                const selectedClass = (ratings[qId] && i <= ratings[qId]) ? ' selected' : '';
+                buttonsHTML += `<button type="button" class="scale-btn${selectedClass}" data-question="${qId}" data-value="${i}" title="${i} / 10">★</button>`;
             }
+            buttonsHTML += '</div>';
+
+            group.innerHTML = `
+                <div class="question-title">${q.title}</div>
+                <div class="question-desc">${q.desc}</div>
+                ${buttonsHTML}
+                <div class="scale-labels">
+                    <span>${t.scaleWorst}</span>
+                    <span>${t.scaleBest}</span>
+                </div>
+            `;
+            container.appendChild(group);
         });
+
+        attachStarEvents();
     }
 
-    stars.forEach(star => {
-        star.addEventListener('click', () => {
-            currentRating = parseInt(star.getAttribute('data-value'));
-            ratingInput.value = currentRating;
-            updateStarDisplay(currentRating);
-        });
+    function attachStarEvents() {
+        document.querySelectorAll('.scale-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const targetBtn = e.currentTarget;
+                const qId = targetBtn.getAttribute('data-question');
+                const val = parseInt(targetBtn.getAttribute('data-value'), 10);
 
-        star.addEventListener('mouseenter', () => {
-            const val = parseInt(star.getAttribute('data-value'));
-            stars.forEach(s => {
-                if (parseInt(s.getAttribute('data-value')) <= val) {
-                    s.classList.add('hovered');
-                } else {
-                    s.classList.remove('hovered');
-                }
+                const allBtnsInGroup = document.querySelectorAll(`.scale-btn[data-question="${qId}"]`);
+                allBtnsInGroup.forEach(b => {
+                    const bVal = parseInt(b.getAttribute('data-value'), 10);
+                    if (bVal <= val) {
+                        b.classList.add('selected');
+                    } else {
+                        b.classList.remove('selected');
+                    }
+                });
+
+                ratings[qId] = val;
             });
         });
+    }
+
+    // Odesílání přes FormSubmit.co s parametrem _cc
+    document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (Object.keys(ratings).length < questionIds.length) {
+            alert(translations[currentLang].alertRating);
+            return;
+        }
+
+        const t = translations[currentLang];
+        const payload = {
+            "Jméno hosta": document.getElementById('guestName').value || "Neuvedeno",
+            "E-mail hosta": document.getElementById('guestEmail').value || "Neuvedeno",
+            "Jazyk": currentLang.toUpperCase(),
+            "Komentář": document.getElementById('comments').value || "Bez komentáře",
+            "_subject": `Nové hodnocení ubytování (${currentLang.toUpperCase()})`,
+            "_template": "table",
+            "_captcha": "false",
+            "_cc": "kopie-email@domena.cz" // <-- Zde zadejte druhý e-mail pro kopii
+        };
+
+        questionIds.forEach((id, index) => {
+            payload[t.questions[index].title] = `${ratings[id]} / 10`;
+        });
+
+        try {
+            const response = await fetch(e.target.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                document.getElementById('feedbackForm').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+            } else {
+                alert('Chyba při odesílání formuláře.');
+            }
+        } catch (error) {
+            alert('Došlo k síťové chybě.');
+        }
     });
 
-    document.getElementById('starContainer').addEventListener('mouseleave', () => {
-        stars.forEach(s => s.classList.remove('hovered'));
-        updateStarDisplay(currentRating);
-    });
-
-    updateStarDisplay(5);
+    changeLanguage('cs');
 </script>
 
 </body>
