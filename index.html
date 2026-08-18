@@ -3,69 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Napište nám recenzi</title>
+    <title>Aplikace pro sběr recenzí</title>
     <style>
         :root {
-            --primary: #4338ca;
-            --primary-hover: #3730a3;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
             --bg: #f8fafc;
             --card-bg: #ffffff;
-            --text-title: #0f172a;
-            --text-label: #1e293b;
-            --text-muted: #64748b;
+            --text: #1e293b;
+            --text-light: #64748b;
             --border: #e2e8f0;
-            --border-focus: #4338ca;
-            --star-gold: #f59e0b;
-            --star-gray: #cbd5e1;
+            --success: #10b981;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
 
         body {
             background-color: var(--bg);
-            color: var(--text-label);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 30px 16px;
+            color: var(--text);
+            line-height: 1.5;
+            padding: 24px;
         }
 
         .container {
-            width: 100%;
-            max-width: 580px;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
-        .header {
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+        }
+
+        select.lang-select {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+        }
+
+        header {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 32px;
         }
 
-        .header h1 {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--text-title);
-            margin-bottom: 10px;
-            letter-spacing: -0.5px;
+        header h1 {
+            font-size: 1.75rem;
+            color: var(--text);
+            margin-bottom: 8px;
         }
 
-        .header p {
-            color: var(--text-muted);
-            font-size: 15px;
-            line-height: 1.4;
+        header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 16px;
             border: 1px solid var(--border);
-            padding: 32px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .form-group {
@@ -74,9 +82,8 @@
 
         label {
             display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-label);
+            font-weight: 500;
+            font-size: 0.9rem;
             margin-bottom: 8px;
         }
 
@@ -84,123 +91,105 @@
         input[type="email"],
         textarea {
             width: 100%;
-            padding: 12px 14px;
+            padding: 10px 14px;
             border: 1px solid var(--border);
             border-radius: 8px;
-            font-size: 15px;
-            color: var(--text-label);
-            background-color: #fff;
+            font-size: 0.95rem;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s;
         }
 
         input[type="text"]:focus,
         input[type="email"]:focus,
         textarea:focus {
-            border-color: var(--border-focus);
-            box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.1);
-        }
-
-        input::placeholder,
-        textarea::placeholder {
-            color: #94a3b8;
+            border-color: var(--primary);
         }
 
         textarea {
-            min-height: 130px;
             resize: vertical;
+            min-height: 120px;
         }
 
         .rating-stars {
             display: flex;
-            gap: 6px;
-            margin-top: 4px;
+            gap: 8px;
         }
 
         .star {
-            font-size: 30px;
-            line-height: 1;
-            color: var(--star-gray);
+            font-size: 2rem;
+            color: #cbd5e1;
             background: none;
             border: none;
             cursor: pointer;
-            padding: 0;
-            transition: color 0.15s ease, transform 0.1s ease;
-            user-select: none;
-        }
-
-        .star:hover {
-            transform: scale(1.1);
+            transition: color 0.15s ease;
         }
 
         .star.selected,
         .star.hovered {
-            color: var(--star-gold);
+            color: #f59e0b;
         }
 
-        .submit-btn {
-            width: 100%;
+        button.btn {
             background-color: var(--primary);
-            color: #ffffff;
+            color: white;
             border: none;
+            padding: 12px 20px;
             border-radius: 8px;
-            padding: 14px 20px;
-            font-size: 15px;
-            font-weight: 600;
+            font-weight: 500;
+            font-size: 0.95rem;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            margin-top: 8px;
+            width: 100%;
+            transition: background-color 0.2s;
         }
 
-        .submit-btn:hover {
+        button.btn:hover {
             background-color: var(--primary-hover);
         }
 
-        .submit-btn:active {
-            transform: scale(0.99);
-        }
-
-        .success-message {
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
             display: none;
-            text-align: center;
-            padding: 30px 10px;
-        }
-
-        .success-message h2 {
-            color: #16a34a;
-            font-size: 22px;
-            margin-bottom: 8px;
-        }
-
-        .success-message p {
-            color: var(--text-muted);
-            font-size: 15px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <h1>Napište nám recenzi</h1>
-        <p>Vaše zpětná vazba je pro nás velice důležitá a pomáhá nám zlepšovat naše služby.</p>
+    <div class="top-bar">
+        <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="cs">Čeština</option>
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="pl">Polski</option>
+        </select>
     </div>
 
+    <header>
+        <h1 id="t-title">Napište nám recenzi</h1>
+        <p id="t-subtitle">Vaše zpětná vazba je pro nás velice důležitá a pomáhá nám zlepšovat naše služby.</p>
+    </header>
+
     <div class="card">
-        <!-- Zde zadejte hlavní e-mail, kam má recenze dorazit -->
-        <form id="reviewForm" action="https://formsubmit.co/vich@hotelbabylon.cz" method="POST">
+        <div id="successAlert" class="alert-success">Děkujeme! Vaše recenze byla úspěšně odeslána.</div>
+        
+        <form id="reviewForm" action="https://formspree.io/f/xvkprnzn" method="POST">
             <div class="form-group">
-                <label for="author">Vaše jméno</label>
-                <input type="text" id="author" name="author" placeholder="např. Jan Novák" required>
+                <label id="t-nameLabel" for="author">Vaše jméno</label>
+                <input type="text" id="author" name="author" required placeholder="např. Jan Novák">
             </div>
 
             <div class="form-group">
-                <label for="email">E-mail (nepovinné)</label>
+                <label id="t-emailLabel" for="email">E-mail (nepovinné)</label>
                 <input type="email" id="email" name="email" placeholder="např. jan.novak@email.cz">
             </div>
 
             <div class="form-group">
-                <label>Hodnocení</label>
+                <label id="t-ratingLabel">Hodnocení</label>
                 <div class="rating-stars" id="starContainer">
                     <button type="button" class="star" data-value="1">★</button>
                     <button type="button" class="star" data-value="2">★</button>
@@ -208,33 +197,98 @@
                     <button type="button" class="star" data-value="4">★</button>
                     <button type="button" class="star" data-value="5">★</button>
                 </div>
-                <input type="hidden" id="rating" name="rating" value="5">
+                <input type="hidden" id="rating" name="rating" value="5" required>
             </div>
 
             <div class="form-group">
-                <label for="comment">Vaše hodnocení a zkušenost</label>
-                <textarea id="comment" name="comment" placeholder="Napište nám, co se vám líbilo nebo co bychom mohli zlepšit..." required></textarea>
+                <label id="t-commentLabel" for="comment">Vaše hodnocení a zkušenost</label>
+                <textarea id="comment" name="comment" required placeholder="Napište nám, co se vám líbilo nebo co bychom mohli zlepšit..."></textarea>
             </div>
 
-            <button type="submit" class="submit-btn" id="submitBtn">Odeslat recenzi</button>
+            <button type="submit" id="t-submitBtn" class="btn">Odeslat recenzi</button>
         </form>
-
-        <div class="success-message" id="successMessage">
-            <h2>Děkujeme za recenzi!</h2>
-            <p>Vaše hodnocení bylo úspěšně odesláno.</p>
-        </div>
     </div>
 </div>
 
 <script>
+    const translations = {
+        cs: {
+            title: "Napište nám recenzi",
+            subtitle: "Vaše zpětná vazba je pro nás velice důležitá a pomáhá nám zlepšovat naše služby.",
+            nameLabel: "Vaše jméno",
+            namePlaceholder: "např. Jan Novák",
+            emailLabel: "E-mail (nepovinné)",
+            emailPlaceholder: "např. jan.novak@email.cz",
+            ratingLabel: "Hodnocení",
+            commentLabel: "Vaše hodnocení a zkušenost",
+            commentPlaceholder: "Napište nám, co se vám líbilo nebo co bychom mohli zlepšit...",
+            submitBtn: "Odeslat recenzi",
+            successAlert: "Děkujeme! Vaše recenze byla úspěšně odeslána."
+        },
+        en: {
+            title: "Leave us a review",
+            subtitle: "Your feedback is very important to us and helps us improve our services.",
+            nameLabel: "Your name",
+            namePlaceholder: "e.g. John Doe",
+            emailLabel: "E-mail (optional)",
+            emailPlaceholder: "e.g. john.doe@email.com",
+            ratingLabel: "Rating",
+            commentLabel: "Your experience",
+            commentPlaceholder: "Tell us what you liked or what we could improve...",
+            submitBtn: "Submit review",
+            successAlert: "Thank you! Your review has been successfully submitted."
+        },
+        de: {
+            title: "Hinterlassen Sie uns eine Bewertung",
+            subtitle: "Ihr Feedback ist uns sehr wichtig und hilft uns, unsere Dienstleistungen zu verbessern.",
+            nameLabel: "Ihr Name",
+            namePlaceholder: "z.B. Max Mustermann",
+            emailLabel: "E-Mail (optional)",
+            emailPlaceholder: "z.B. max@email.de",
+            ratingLabel: "Bewertung",
+            commentLabel: "Ihre Erfahrung",
+            commentPlaceholder: "Teilen Sie uns mit, was Ihnen gefallen hat oder was wir verbessern könnten...",
+            submitBtn: "Bewertung absenden",
+            successAlert: "Vielen Dank! Ihre Bewertung wurde erfolgreich gesendet."
+        },
+        pl: {
+            title: "Zostaw nam opinię",
+            subtitle: "Twoja opinia jest dla nas bardzo ważna i pomaga nam ulepszać nasze usługi.",
+            nameLabel: "Twoje imię",
+            namePlaceholder: "np. Jan Kowalski",
+            emailLabel: "E-mail (opcjonalnie)",
+            emailPlaceholder: "np. jan@email.pl",
+            ratingLabel: "Ocena",
+            commentLabel: "Twoja opinia i doświadczenie",
+            commentPlaceholder: "Napisz nam, co Ci się podobało lub co moglibyśmy poprawić...",
+            submitBtn: "Wyślij opinię",
+            successAlert: "Dziękujemy! Twoja opinia została pomyślnie wysłana."
+        }
+    };
+
     let currentRating = 5;
     const stars = document.querySelectorAll('.star');
     const ratingInput = document.getElementById('rating');
 
-    function updateStars(val) {
+    function changeLanguage(lang) {
+        const t = translations[lang];
+        document.getElementById('t-title').textContent = t.title;
+        document.getElementById('t-subtitle').textContent = t.subtitle;
+        document.getElementById('t-nameLabel').textContent = t.nameLabel;
+        document.getElementById('author').placeholder = t.namePlaceholder;
+        document.getElementById('t-emailLabel').textContent = t.emailLabel;
+        document.getElementById('email').placeholder = t.emailPlaceholder;
+        document.getElementById('t-ratingLabel').textContent = t.ratingLabel;
+        document.getElementById('t-commentLabel').textContent = t.commentLabel;
+        document.getElementById('comment').placeholder = t.commentPlaceholder;
+        document.getElementById('t-submitBtn').textContent = t.submitBtn;
+        document.getElementById('successAlert').textContent = t.successAlert;
+    }
+
+    function updateStarDisplay(rating) {
         stars.forEach(star => {
-            const starVal = parseInt(star.getAttribute('data-value'), 10);
-            if (starVal <= val) {
+            const val = parseInt(star.getAttribute('data-value'));
+            if (val <= rating) {
                 star.classList.add('selected');
             } else {
                 star.classList.remove('selected');
@@ -244,16 +298,15 @@
 
     stars.forEach(star => {
         star.addEventListener('click', () => {
-            currentRating = parseInt(star.getAttribute('data-value'), 10);
+            currentRating = parseInt(star.getAttribute('data-value'));
             ratingInput.value = currentRating;
-            updateStars(currentRating);
+            updateStarDisplay(currentRating);
         });
 
         star.addEventListener('mouseenter', () => {
-            const hoverVal = parseInt(star.getAttribute('data-value'), 10);
+            const val = parseInt(star.getAttribute('data-value'));
             stars.forEach(s => {
-                const sVal = parseInt(s.getAttribute('data-value'), 10);
-                if (sVal <= hoverVal) {
+                if (parseInt(s.getAttribute('data-value')) <= val) {
                     s.classList.add('hovered');
                 } else {
                     s.classList.remove('hovered');
@@ -264,374 +317,10 @@
 
     document.getElementById('starContainer').addEventListener('mouseleave', () => {
         stars.forEach(s => s.classList.remove('hovered'));
-        updateStars(currentRating);
+        updateStarDisplay(currentRating);
     });
 
-    // Výchozí stav (5 hvězdiček vybráno)
-    updateStars(currentRating);
-
-    // Odeslání formuláře
-    document.getElementById('reviewForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const submitBtn = document.getElementById('submitBtn');
-        submitBtn.disabled = true;
-        submitBtn.innerText = 'Odesílám...';
-
-        const payload = {
-            "Jméno hosta": document.getElementById('author').value,
-            "E-mail hosta": document.getElementById('email').value || "Neuvedeno",
-            "Hodnocení": `${currentRating} / 5 hvězdiček`,
-            "Zkušenost hosta": document.getElementById('comment').value,
-            "_subject": "Nová recenze od hosta",
-            "_template": "table",
-            "_captcha": "false",
-            "_cc": "sykorova@hotelbabylon.cz"
-        };
-
-        try {
-            const response = await fetch(e.target.action, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (response.ok) {
-                document.getElementById('reviewForm').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
-            } else {
-                alert('Odeslání se nezdařilo. Zkuste to prosím znovu.');
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'Odeslat recenzi';
-            }
-        } catch (err) {
-            alert('Došlo k chybě připojení.');
-            submitBtn.disabled = false;
-            submitBtn.innerText = 'Odeslat recenzi';
-        }
-    });
-</script>
-
-</body>
-</html>
-```Zde je kompletní kód pro soubor **`index.html`**, který přesně odpovídá vzhledu z prvního obrázku (čistý formulář s bílou kartou, 5 hvězdičkami, zaoblenými poli a fialovým tlačítkem) a je připraven pro odesílání přes FormSubmit na oba vaše e-maily:
-
-```html
-<!DOCTYPE html>
-<html lang="cs">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Napište nám recenzi</title>
-    <style>
-        :root {
-            --primary: #4338ca;
-            --primary-hover: #3730a3;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-title: #0f172a;
-            --text-label: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --border-focus: #4338ca;
-            --star-gold: #f59e0b;
-            --star-gray: #cbd5e1;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text-label);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 30px 16px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 580px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-
-        .header h1 {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--text-title);
-            margin-bottom: 10px;
-            letter-spacing: -0.5px;
-        }
-
-        .header p {
-            color: var(--text-muted);
-            font-size: 15px;
-            line-height: 1.4;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            padding: 32px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-label);
-            margin-bottom: 8px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 15px;
-            color: var(--text-label);
-            background-color: #fff;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        textarea:focus {
-            border-color: var(--border-focus);
-            box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.1);
-        }
-
-        input::placeholder,
-        textarea::placeholder {
-            color: #94a3b8;
-        }
-
-        textarea {
-            min-height: 130px;
-            resize: vertical;
-        }
-
-        .rating-stars {
-            display: flex;
-            gap: 6px;
-            margin-top: 4px;
-        }
-
-        .star {
-            font-size: 30px;
-            line-height: 1;
-            color: var(--star-gray);
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            transition: color 0.15s ease, transform 0.1s ease;
-            user-select: none;
-        }
-
-        .star:hover {
-            transform: scale(1.1);
-        }
-
-        .star.selected,
-        .star.hovered {
-            color: var(--star-gold);
-        }
-
-        .submit-btn {
-            width: 100%;
-            background-color: var(--primary);
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            padding: 14px 20px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            margin-top: 8px;
-        }
-
-        .submit-btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .submit-btn:active {
-            transform: scale(0.99);
-        }
-
-        .success-message {
-            display: none;
-            text-align: center;
-            padding: 30px 10px;
-        }
-
-        .success-message h2 {
-            color: #16a34a;
-            font-size: 22px;
-            margin-bottom: 8px;
-        }
-
-        .success-message p {
-            color: var(--text-muted);
-            font-size: 15px;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="header">
-        <h1>Napište nám recenzi</h1>
-        <p>Vaše zpětná vazba je pro nás velice důležitá a pomáhá nám zlepšovat naše služby.</p>
-    </div>
-
-    <div class="card">
-        <form id="reviewForm" action="https://formsubmit.co/vich@hotelbabylon.cz" method="POST">
-            <div class="form-group">
-                <label for="author">Vaše jméno</label>
-                <input type="text" id="author" name="author" placeholder="např. Jan Novák" required>
-            </div>
-
-            <div class="form-group">
-                <label for="email">E-mail (nepovinné)</label>
-                <input type="email" id="email" name="email" placeholder="např. jan.novak@email.cz">
-            </div>
-
-            <div class="form-group">
-                <label>Hodnocení</label>
-                <div class="rating-stars" id="starContainer">
-                    <button type="button" class="star" data-value="1">★</button>
-                    <button type="button" class="star" data-value="2">★</button>
-                    <button type="button" class="star" data-value="3">★</button>
-                    <button type="button" class="star" data-value="4">★</button>
-                    <button type="button" class="star" data-value="5">★</button>
-                </div>
-                <input type="hidden" id="rating" name="rating" value="5">
-            </div>
-
-            <div class="form-group">
-                <label for="comment">Vaše hodnocení a zkušenost</label>
-                <textarea id="comment" name="comment" placeholder="Napište nám, co se vám líbilo nebo co bychom mohli zlepšit..." required></textarea>
-            </div>
-
-            <button type="submit" class="submit-btn" id="submitBtn">Odeslat recenzi</button>
-        </form>
-
-        <div class="success-message" id="successMessage">
-            <h2>Děkujeme za recenzi!</h2>
-            <p>Vaše hodnocení bylo úspěšně odesláno.</p>
-        </div>
-    </div>
-</div>
-
-<script>
-    let currentRating = 5;
-    const stars = document.querySelectorAll('.star');
-    const ratingInput = document.getElementById('rating');
-
-    function updateStars(val) {
-        stars.forEach(star => {
-            const starVal = parseInt(star.getAttribute('data-value'), 10);
-            if (starVal <= val) {
-                star.classList.add('selected');
-            } else {
-                star.classList.remove('selected');
-            }
-        });
-    }
-
-    stars.forEach(star => {
-        star.addEventListener('click', () => {
-            currentRating = parseInt(star.getAttribute('data-value'), 10);
-            ratingInput.value = currentRating;
-            updateStars(currentRating);
-        });
-
-        star.addEventListener('mouseenter', () => {
-            const hoverVal = parseInt(star.getAttribute('data-value'), 10);
-            stars.forEach(s => {
-                const sVal = parseInt(s.getAttribute('data-value'), 10);
-                if (sVal <= hoverVal) {
-                    s.classList.add('hovered');
-                } else {
-                    s.classList.remove('hovered');
-                }
-            });
-        });
-    });
-
-    document.getElementById('starContainer').addEventListener('mouseleave', () => {
-        stars.forEach(s => s.classList.remove('hovered'));
-        updateStars(currentRating);
-    });
-
-    updateStars(currentRating);
-
-    document.getElementById('reviewForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const submitBtn = document.getElementById('submitBtn');
-        submitBtn.disabled = true;
-        submitBtn.innerText = 'Odesílám...';
-
-        const payload = {
-            "Jméno hosta": document.getElementById('author').value,
-            "E-mail hosta": document.getElementById('email').value || "Neuvedeno",
-            "Hodnocení": `${currentRating} / 5 hvězdiček`,
-            "Zkušenost hosta": document.getElementById('comment').value,
-            "_subject": "Nová recenze od hosta",
-            "_template": "table",
-            "_captcha": "false",
-            "_cc": "sykorova@hotelbabylon.cz"
-        };
-
-        try {
-            const response = await fetch(e.target.action, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (response.ok) {
-                document.getElementById('reviewForm').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
-            } else {
-                alert('Odeslání se nezdařilo. Zkuste to prosím znovu.');
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'Odeslat recenzi';
-            }
-        } catch (err) {
-            alert('Došlo k chybě připojení.');
-            submitBtn.disabled = false;
-            submitBtn.innerText = 'Odeslat recenzi';
-        }
-    });
+    updateStarDisplay(5);
 </script>
 
 </body>
