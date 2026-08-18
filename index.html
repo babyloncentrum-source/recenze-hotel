@@ -157,7 +157,7 @@
             cursor: not-allowed;
         }
 
-        /* Děkovná obrazovka po odeslání */
+        /* Děkovný blok po odeslání */
         .thank-you-box {
             display: none;
             text-align: center;
@@ -234,7 +234,7 @@
             <button type="submit" id="t-submitBtn" class="btn">Odeslat recenzi</button>
         </form>
 
-        <!-- Děkovná zpráva (zobrazí se ihned po odeslání) -->
+        <!-- Děkovná obrazovka po odeslání -->
         <div id="thankYouBox" class="thank-you-box">
             <div class="thank-you-icon">✓</div>
             <div id="t-tyTitle" class="thank-you-title">Děkujeme za Vaše hodnocení!</div>
@@ -367,25 +367,26 @@
         updateStarDisplay(currentRating);
     });
 
-    // Odeslání formuláře na pozadí (AJAX) bez přebliknutí stránky
+    // AJAX odeslání bez přebliknutí a přesměrování
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
         submitBtn.disabled = true;
         submitBtn.textContent = translations[currentLang].submittingBtn;
 
+        const emailValue = document.getElementById('email').value.trim();
         const payload = {
-            "Jméno hosta": document.getElementById('author').value,
-            "E-mail hosta": document.getElementById('email').value || "Neuvedeno",
+            "Jméno hosta": document.getElementById('author').value.trim(),
+            "E-mail hosta": emailValue || "Neuvedeno",
             "Hodnocení (hvězdičky)": currentRating + " z 5",
-            "Slovní hodnocení": document.getElementById('comment').value,
+            "Slovní hodnocení": document.getElementById('comment').value.trim(),
             "_subject": "Nové hodnocení pobytu – Hotel Babylon",
             "_template": "table",
             "_captcha": "false"
         };
 
-        if (document.getElementById('email').value) {
-            payload["email"] = document.getElementById('email').value;
+        if (emailValue) {
+            payload["email"] = emailValue;
             payload["_autoresponse"] = translations[currentLang].tyTitle + " " + translations[currentLang].tyText;
         }
 
@@ -397,12 +398,11 @@
             },
             body: JSON.stringify(payload)
         })
-        .then(response => {
+        .then(() => {
             form.style.display = 'none';
             thankYouBox.style.display = 'block';
         })
-        .catch(error => {
-            // I při chybě sítě zobrazíme potvrzení
+        .catch(() => {
             form.style.display = 'none';
             thankYouBox.style.display = 'block';
         });
