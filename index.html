@@ -171,38 +171,46 @@
     </header>
 
     <div class="card">
-        <form id="reviewForm" action="https://formspree.io/f/xvkprnzn" method="POST">
-            <div class="form-group">
-                <label id="t-nameLabel" for="author">Vaše jméno</label>
-                <input type="text" id="author" name="author" required placeholder="např. Jan Novák">
-            </div>
+       <form action="https://formsubmit.co/vich@hotelbabylon.cz" method="POST">
 
-            <div class="form-group">
-                <label id="t-emailLabel" for="email">E-mail (nepovinné)</label>
-                <input type="email" id="email" name="email" placeholder="např. jan.novak@email.cz">
-            </div>
+    <!-- Skrytá pole pro konfiguraci FormSubmit -->
+    <!-- 1. Vypnutí reCAPTCHA (nepovinné, pro jednodušší odeslání) -->
+    <input type="hidden" name="_captcha" value="false">
 
-            <div class="form-group">
-                <label id="t-ratingLabel">Hodnocení</label>
-                <div class="rating-stars" id="starContainer">
-                    <button type="button" class="star selected" data-value="1">★</button>
-                    <button type="button" class="star selected" data-value="2">★</button>
-                    <button type="button" class="star selected" data-value="3">★</button>
-                    <button type="button" class="star selected" data-value="4">★</button>
-                    <button type="button" class="star selected" data-value="5">★</button>
-                </div>
-                <input type="hidden" id="rating" name="rating" value="5" required>
-            </div>
+    <!-- 2. Nastavení předmětu příchozího e-mailu -->
+    <input type="hidden" name="_subject" value="Nová recenze z webu">
 
-            <div class="form-group">
-                <label id="t-commentLabel" for="comment">Vaše hodnocení a zkušenost</label>
-                <textarea id="comment" name="comment" required placeholder="Napište nám, co se vám líbilo nebo co bychom mohli zlepšit..."></textarea>
-            </div>
+    <!-- 3. Přesměrování na vlastní děkovnou stránku nebo zpět na formulář -->
+    <input type="hidden" name="_next" value="https://babyloncentrum-source.github.io/recenze-hotel/">
 
-            <button type="submit" id="t-submitBtn" class="btn">Odeslat recenzi</button>
-        </form>
+    <!-- 4. Šablona e-mailu (tabulka pro přehlednost) -->
+    <input type="hidden" name="_template" value="table">
+
+    <!-- Samotná pole formuláře (musí mít atribut name) -->
+    <div class="form-group">
+        <label for="author">Vaše jméno</label>
+        <input type="text" id="author" name="Jméno" required placeholder="např. Jan Novák">
     </div>
-</div>
+
+    <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="Email" placeholder="např. jan.novak@email.cz">
+    </div>
+
+    <div class="form-group">
+        <label>Hodnocení</label>
+        <input type="hidden" id="rating" name="Hodnocení" value="5">
+        <!-- Zde jsou tlačítka hvězdiček -->
+    </div>
+
+    <div class="form-group">
+        <label for="comment">Vaše hodnocení a zkušenost</label>
+        <textarea id="comment" name="Recenze" required placeholder="Napište nám..."></textarea>
+    </div>
+
+    <button type="submit">Odeslat recenzi</button>
+</form>
+
 
 <script>
     const translations = {
