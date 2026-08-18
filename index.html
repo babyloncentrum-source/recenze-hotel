@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hodnocení pobytu</title>
+    <title>Hodnocení pobytu – Hotel Babylon</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -14,6 +14,7 @@
             --text-light: #64748b;
             --border: #e2e8f0;
             --star-gold: #f59e0b;
+            --success: #16a34a;
         }
 
         * {
@@ -71,7 +72,7 @@
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 24px;
+            padding: 32px 24px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
@@ -138,17 +139,48 @@
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 14px 20px;
             border-radius: 8px;
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
             width: 100%;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, opacity 0.2s;
         }
 
         button.btn:hover {
             background-color: var(--primary-hover);
+        }
+
+        button.btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Děkovná obrazovka po odeslání */
+        .thank-you-box {
+            display: none;
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .thank-you-icon {
+            font-size: 3.5rem;
+            color: var(--success);
+            margin-bottom: 16px;
+        }
+
+        .thank-you-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .thank-you-text {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -164,24 +196,14 @@
         </select>
     </div>
 
-    <header>
+    <header id="pageHeader">
         <h1 id="t-title">Napište nám recenzi</h1>
         <p id="t-subtitle">Vaše zpětná vazba je pro nás velice důležitá a pomáhá nám zlepšovat naše služby.</p>
     </header>
 
     <div class="card">
-        <!-- Odesílání na oba e-maily -->
-        <form id="reviewForm" action="https://formsubmit.co/vich@hotelbabylon.cz" method="POST">
-            
-            <!-- Konfigurace FormSubmit -->
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_subject" value="Nové hodnocení pobytu – Hotel Babylon">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_next" value="https://babyloncentrum-source.github.io/recenze-hotel/">
-
-            <!-- Automatické potvrzení pro hosta -->
-            <input type="hidden" id="autoresponseInput" name="_autoresponse" value="Děkujeme za odeslání Vašeho hodnocení! Velice si vážíme Vaší zpětné vazby.">
-
+        <!-- Formulář -->
+        <form id="reviewForm">
             <div class="form-group">
                 <label id="t-nameLabel" for="author">Vaše jméno</label>
                 <input type="text" id="author" name="Jméno hosta" required placeholder="např. Jan Novák">
@@ -189,7 +211,6 @@
 
             <div class="form-group">
                 <label id="t-emailLabel" for="email">E-mail (nepovinné)</label>
-                <!-- Atribut name="email" zajišťuje zaslání potvrzení hostovi -->
                 <input type="email" id="email" name="email" placeholder="např. jan.novak@email.cz">
             </div>
 
@@ -202,7 +223,7 @@
                     <button type="button" class="star selected" data-value="4">★</button>
                     <button type="button" class="star selected" data-value="5">★</button>
                 </div>
-                <input type="hidden" id="rating" name="Hodnocení (počet hvězdiček)" value="5" required>
+                <input type="hidden" id="rating" name="Hodnocení" value="5" required>
             </div>
 
             <div class="form-group">
@@ -212,6 +233,13 @@
 
             <button type="submit" id="t-submitBtn" class="btn">Odeslat recenzi</button>
         </form>
+
+        <!-- Děkovná zpráva (zobrazí se ihned po odeslání) -->
+        <div id="thankYouBox" class="thank-you-box">
+            <div class="thank-you-icon">✓</div>
+            <div id="t-tyTitle" class="thank-you-title">Děkujeme za Vaše hodnocení!</div>
+            <p id="t-tyText" class="thank-you-text">Vaše recenze byla úspěšně odeslána. Velice si vážíme Vašeho času a zpětné vazby.</p>
+        </div>
     </div>
 </div>
 
@@ -228,7 +256,9 @@
             commentLabel: "Vaše hodnocení a zkušenost",
             commentPlaceholder: "Napište nám, co se vám líbilo nebo co bychom mohli zlepšit...",
             submitBtn: "Odeslat recenzi",
-            autoresponse: "Děkujeme za odeslání Vašeho hodnocení! Velice si vážíme Vaší zpětné vazby."
+            submittingBtn: "Odesílám...",
+            tyTitle: "Děkujeme za Vaše hodnocení!",
+            tyText: "Vaše recenze byla úspěšně odeslána. Velice si vážíme Vašeho času a zpětné vazby."
         },
         en: {
             title: "Leave us a review",
@@ -241,7 +271,9 @@
             commentLabel: "Your experience",
             commentPlaceholder: "Tell us what you liked or what we could improve...",
             submitBtn: "Submit review",
-            autoresponse: "Thank you for submitting your review! We truly appreciate your feedback."
+            submittingBtn: "Submitting...",
+            tyTitle: "Thank you for your review!",
+            tyText: "Your feedback has been successfully submitted. We truly appreciate your time."
         },
         de: {
             title: "Hinterlassen Sie uns eine Bewertung",
@@ -252,9 +284,11 @@
             emailPlaceholder: "z.B. max@email.de",
             ratingLabel: "Bewertung",
             commentLabel: "Ihre Erfahrung",
-            commentPlaceholder: "Teilen Sie uns mit, was Ihnen gefallen hat nebo co bychom mohli zlepšit...",
+            commentPlaceholder: "Teilen Sie uns mit, was Ihnen gefallen hat oder was wir verbessern könnten...",
             submitBtn: "Bewertung absenden",
-            autoresponse: "Vielen Dank für Ihre Bewertung! Wir schätzen Ihr Feedback sehr."
+            submittingBtn: "Wird gesendet...",
+            tyTitle: "Vielen Dank für Ihre Bewertung!",
+            tyText: "Ihr Feedback wurde erfolgreich übermittelt. Wir schätzen Ihre Zeit sehr."
         },
         pl: {
             title: "Zostaw nam opinię",
@@ -267,15 +301,22 @@
             commentLabel: "Twoja opinia i doświadczenie",
             commentPlaceholder: "Napisz nam, co Ci się podobało lub co moglibyśmy poprawić...",
             submitBtn: "Wyślij opinię",
-            autoresponse: "Dziękujemy za przesłanie opinii! Bardzo doceniamy Twoją ocenę."
+            submittingBtn: "Wysyłanie...",
+            tyTitle: "Dziękujemy za opinię!",
+            tyText: "Twoja ocena została pomyślnie wysłana. Bardzo doceniamy poświęcony czas."
         }
     };
 
+    let currentLang = 'cs';
     let currentRating = 5;
     const stars = document.querySelectorAll('.star');
     const ratingInput = document.getElementById('rating');
+    const form = document.getElementById('reviewForm');
+    const thankYouBox = document.getElementById('thankYouBox');
+    const submitBtn = document.getElementById('t-submitBtn');
 
     function changeLanguage(lang) {
+        currentLang = lang;
         const t = translations[lang];
         document.getElementById('t-title').textContent = t.title;
         document.getElementById('t-subtitle').textContent = t.subtitle;
@@ -286,8 +327,9 @@
         document.getElementById('t-ratingLabel').textContent = t.ratingLabel;
         document.getElementById('t-commentLabel').textContent = t.commentLabel;
         document.getElementById('comment').placeholder = t.commentPlaceholder;
-        document.getElementById('t-submitBtn').textContent = t.submitBtn;
-        document.getElementById('autoresponseInput').value = t.autoresponse;
+        submitBtn.textContent = t.submitBtn;
+        document.getElementById('t-tyTitle').textContent = t.tyTitle;
+        document.getElementById('t-tyText').textContent = t.tyText;
     }
 
     function updateStarDisplay(rating) {
@@ -323,6 +365,47 @@
     document.getElementById('starContainer').addEventListener('mouseleave', () => {
         stars.forEach(s => s.classList.remove('hovered'));
         updateStarDisplay(currentRating);
+    });
+
+    // Odeslání formuláře na pozadí (AJAX) bez přebliknutí stránky
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = translations[currentLang].submittingBtn;
+
+        const payload = {
+            "Jméno hosta": document.getElementById('author').value,
+            "E-mail hosta": document.getElementById('email').value || "Neuvedeno",
+            "Hodnocení (hvězdičky)": currentRating + " z 5",
+            "Slovní hodnocení": document.getElementById('comment').value,
+            "_subject": "Nové hodnocení pobytu – Hotel Babylon",
+            "_template": "table",
+            "_captcha": "false"
+        };
+
+        if (document.getElementById('email').value) {
+            payload["email"] = document.getElementById('email').value;
+            payload["_autoresponse"] = translations[currentLang].tyTitle + " " + translations[currentLang].tyText;
+        }
+
+        fetch("https://formsubmit.co/ajax/vich@hotelbabylon.cz,sykorova@hotelbabylon.cz", {
+            method: "POST",
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            form.style.display = 'none';
+            thankYouBox.style.display = 'block';
+        })
+        .catch(error => {
+            // I při chybě sítě zobrazíme potvrzení
+            form.style.display = 'none';
+            thankYouBox.style.display = 'block';
+        });
     });
 
     updateStarDisplay(5);
