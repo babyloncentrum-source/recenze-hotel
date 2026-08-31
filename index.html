@@ -381,7 +381,7 @@
         updateStarDisplay(currentRating);
     });
 
-    // AJAX odeslání přímo na vich@hotelbabylon.cz
+    // AJAX odeslání přímo na vich@hotelbabylon.cz a kopie na sykorova@hotelbabylon.cz
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -396,8 +396,33 @@
             "Slovní hodnocení": document.getElementById('comment').value.trim(),
             "_subject": "Nové hodnocení pobytu – Hotel Babylon",
             "_template": "table",
-            "_captcha": "false"
+            "_captcha": "false",
+            "_cc": "sykorova@hotelbabylon.cz" // <-- Přidáno sem do dat
         };
+
+        if (emailValue) {
+            payload["email"] = emailValue;
+            payload["_autoresponse"] = translations[currentLang].tyTitle + " " + translations[currentLang].tyText;
+        }
+
+        fetch("https://formsubmit.co/ajax/vich@hotelbabylon.cz", {
+            method: "POST",
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(() => {
+            form.style.display = 'none';
+            thankYouBox.style.display = 'block';
+        })
+        .catch(() => {
+            form.style.display = 'none';
+            thankYouBox.style.display = 'block';
+        });
+    });
+
 
         if (emailValue) {
             payload["email"] = emailValue;
@@ -411,9 +436,7 @@
                 'Accept': 'application/json'
             },
             body: JSON.stringify(payload)
-                  _cc: "sykorova@hotelbabylon.cz", // Kopie na další e-mail
-        name: "Jméno odesílatele",        // Vaše pole formuláře
-        message: "Text zprávy"
+
     })
         })
         .then(() => {
