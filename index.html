@@ -397,7 +397,7 @@
             "_subject": "Nové hodnocení pobytu – Hotel Babylon",
             "_template": "table",
             "_captcha": "false",
-            "_cc": "sykorova@hotelbabylon.cz" //
+            "_cc": "sykorova@hotelbabylon.cz"
         };
 
         if (emailValue) {
@@ -423,34 +423,5 @@
         });
     });
 
-
-        if (emailValue) {
-            payload["email"] = emailValue;
-            payload["_autoresponse"] = translations[currentLang].tyTitle + " " + translations[currentLang].tyText;
-        }
-
-        fetch("https://formsubmit.co/ajax/vich@hotelbabylon.cz",{
-            method: "POST",
-            headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(payload)
-
-    })
-        })
-        .then(() => {
-            form.style.display = 'none';
-            thankYouBox.style.display = 'block';
-        })
-        .catch(() => {
-            form.style.display = 'none';
-            thankYouBox.style.display = 'block';
-        });
-    });
-
     updateStarDisplay(5);
 </script>
-
-</body>
-</html>
