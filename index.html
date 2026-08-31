@@ -381,7 +381,7 @@
         updateStarDisplay(currentRating);
     });
 
-    // AJAX odeslání přímo na vich@hotelbabylon.cz, sykorova@hotelbabylon.cz
+    // AJAX odeslání přímo na vich@hotelbabylon.cz
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -404,13 +404,17 @@
             payload["_autoresponse"] = translations[currentLang].tyTitle + " " + translations[currentLang].tyText;
         }
 
-        fetch("https://formsubmit.co/ajax/vich@hotelbabylon.cz", {
+        fetch("https://formsubmit.co/ajax/vich@hotelbabylon.cz",{
             method: "POST",
             headers: { 
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
             body: JSON.stringify(payload)
+                  _cc: "sykorova@hotelbabylon.cz", // Kopie na další e-mail
+        name: "Jméno odesílatele",        // Vaše pole formuláře
+        message: "Text zprávy"
+    })
         })
         .then(() => {
             form.style.display = 'none';
